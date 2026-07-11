@@ -6,6 +6,8 @@ import com.forge.entity.Project;
 import com.forge.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectService {
 
@@ -29,5 +31,9 @@ public class ProjectService {
                 "Project created successfully.",
                 request.name()
         );
+    }
+
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll();
     }
 }

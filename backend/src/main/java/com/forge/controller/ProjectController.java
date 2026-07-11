@@ -5,6 +5,8 @@ import com.forge.dto.CreateProjectRequest;
 import com.forge.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import com.forge.entity.Project;
 
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -22,4 +24,8 @@ public class ProjectController {
 
         return projectService.createProject(request);
     }
+    @GetMapping
+public List<Project> getAllProjects() {
+    return projectService.getAllProjects();
+}
 }
