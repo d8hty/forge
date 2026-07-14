@@ -38,4 +38,14 @@ public ApiResponse<String> handleResourceNotFoundException(
             null
     );
 }
+@ExceptionHandler(RuntimeException.class)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public ApiResponse<String> handleRuntimeException(RuntimeException ex){
+
+    return new ApiResponse<>(
+            false,
+            ex.getMessage(),
+            null
+    );
+}
 }
