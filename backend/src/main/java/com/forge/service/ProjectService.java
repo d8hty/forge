@@ -6,37 +6,64 @@ import com.forge.entity.Project;
 import com.forge.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import com.forge.exception.ResourceNotFoundException;
-
+import com.forge.repository.UserRepository;
 import java.util.List;
+import com.forge.entity.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+private final UserRepository userRepository;
+    public ProjectService(
+        ProjectRepository projectRepository,
+        UserRepository userRepository) {
 
-    public ProjectService(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-    }
+    this.projectRepository = projectRepository;
+    this.userRepository = userRepository;
+}
 
     public ApiResponse<String> createProject(CreateProjectRequest request) {
 
-        Project project = new Project(
-                request.name(),
-                request.repositoryUrl()
-        );
+    Authentication authentication =
+            SecurityContextHolder.getContext().getAuthentication();
 
-        projectRepository.save(project);
+    String email = authentication.getName();
 
-        return new ApiResponse<>(
-                true,
-                "Project created successfully.",
-                request.name()
-        );
-    }
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
+
+    Project project = new Project(
+            request.name(),
+            request.repositoryUrl(),
+            user
+    );
+
+    projectRepository.save(project);
+
+    return new ApiResponse<>(
+            true,
+            "Project created successfully.",
+            request.name()
+    );
+}
 
     public List<Project> getAllProjects() {
-        return projectRepository.findAll();
-    }
+
+    String email = SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getName();
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
+
+    return projectRepository.findByUser(user);
+}
     public Project getProjectById(Long id) {
 
     return projectRepository.findById(id)

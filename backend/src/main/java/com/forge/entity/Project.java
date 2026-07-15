@@ -6,7 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
+import jakarta.persistence.*;import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 @Entity
 @Table(name = "projects")
 public class Project {
@@ -23,12 +24,16 @@ public class Project {
 
     public Project() {}
 
-    public Project(String name, String repositoryUrl) {
-        this.name = name;
-        this.repositoryUrl = repositoryUrl;
-        this.createdAt = LocalDateTime.now();
-    }
+    public Project(
+        String name,
+        String repositoryUrl,
+        User user) {
 
+    this.name = name;
+    this.repositoryUrl = repositoryUrl;
+    this.createdAt = LocalDateTime.now();
+    this.user = user;
+}
     public Long getId() {
         return id;
     }
@@ -50,5 +55,15 @@ public class Project {
 
 public void setRepositoryUrl(String repositoryUrl) {
     this.repositoryUrl = repositoryUrl;
+}
+@ManyToOne
+@JoinColumn(name = "user_id", nullable = false)
+private User user;
+public User getUser() {
+    return user;
+}
+
+public void setUser(User user) {
+    this.user = user;
 }
 }
