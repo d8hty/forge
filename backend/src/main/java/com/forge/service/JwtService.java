@@ -24,5 +24,23 @@ public class JwtService {
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+                
     }
+    public String extractEmail(String token) {
+    return Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .getSubject();
+}
+
+public boolean isTokenValid(String token) {
+    try {
+        extractEmail(token);
+        return true;
+    } catch (Exception e) {
+        return false;
+    }
+}
 }
