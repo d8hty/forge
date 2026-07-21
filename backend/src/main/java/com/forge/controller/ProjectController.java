@@ -7,10 +7,11 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.forge.entity.Project;
-
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @RequestMapping("/api/v1/projects")
-public class ProjectController {
+@SecurityRequirement(name = "bearerAuth")
+public class ProjectController  {
 
     private final ProjectService projectService;
 

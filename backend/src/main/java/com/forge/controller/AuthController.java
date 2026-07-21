@@ -1,5 +1,5 @@
 package com.forge.controller;
-
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import com.forge.dto.ApiResponse;
 import com.forge.dto.RegisterRequest;
 import com.forge.service.AuthService;
