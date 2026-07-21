@@ -1,5 +1,6 @@
 package com.forge.security;
-
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.List;
 import com.forge.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,11 +15,13 @@ public class ForgeUserDetails implements UserDetails {
     public ForgeUserDetails(User user) {
         this.user = user;
     }
+@Override
+public Collection<? extends GrantedAuthority> getAuthorities() {
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
-    }
+    return List.of(
+            new SimpleGrantedAuthority(user.getRole().name())
+    );
+}
 
     @Override
     public String getPassword() {

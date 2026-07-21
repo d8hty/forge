@@ -1,5 +1,5 @@
 package com.forge.service;
-
+import com.forge.entity.Role;
 import com.forge.dto.ApiResponse;
 import com.forge.dto.RegisterRequest;
 import com.forge.entity.User;
@@ -21,11 +21,10 @@ public class AuthService {
     public ApiResponse<String> register(RegisterRequest request) {
 
         User user = new User(
-                request.name(),
-                request.email(),
-                passwordEncoder.encode(request.password())
-        );
-
+        request.name(),
+        request.email(),
+        passwordEncoder.encode(request.password()),
+        Role.ROLE_USER);
         userRepository.save(user);
 
         return new ApiResponse<>(
