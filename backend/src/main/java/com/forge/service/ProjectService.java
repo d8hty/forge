@@ -66,8 +66,17 @@ private final UserRepository userRepository;
 }
     public Project getProjectById(Long id) {
 
-    return projectRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+    User currentUser = getCurrentUser();
+
+    Project project = projectRepository.findById(id)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Project not found"));
+
+    if (!project.getUser().getId().equals(currentUser.getId())) {
+        throw new RuntimeException("Access denied");
+    }
+
+    return project;
 }
 public void deleteProject(Long id) {
     projectRepository.deleteById(id);
@@ -81,5 +90,16 @@ public Project updateProject(Long id, CreateProjectRequest request) {
     project.setRepositoryUrl(request.repositoryUrl());
 
     return projectRepository.save(project);
+}
+private User getCurrentUser() {
+
+    String email = SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getName();
+
+    return userRepository.findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
 }
 }

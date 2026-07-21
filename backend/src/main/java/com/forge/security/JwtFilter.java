@@ -35,11 +35,12 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println(">>> JwtFilter entered");
+        System.out.println(">>> JwtFilter entered: " + request.getRequestURI());
 
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("No Bearer token found.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -49,11 +50,14 @@ public class JwtFilter extends OncePerRequestFilter {
         System.out.println("JWT Received: " + token);
 
         if (!jwtService.isTokenValid(token)) {
+            System.out.println("JWT is INVALID or EXPIRED");
             filterChain.doFilter(request, response);
             return;
         }
 
         String email = jwtService.extractEmail(token);
+
+        System.out.println("Email from JWT: " + email);
 
         UserDetails userDetails =
                 userDetailsService.loadUserByUsername(email);

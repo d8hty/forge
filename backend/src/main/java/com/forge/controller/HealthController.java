@@ -9,6 +9,11 @@ import java.util.Map;
 @RestController
 public class HealthController {
 
+@GetMapping("/test")
+public String test() {
+    System.out.println("TEST HIT");
+    return "OK";
+}
     @GetMapping("/api/v1/health")
     public Map<String, Object> health() {
         return Map.of(

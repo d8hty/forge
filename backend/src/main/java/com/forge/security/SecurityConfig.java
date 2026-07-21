@@ -33,9 +33,10 @@ public SecurityConfig(
     .csrf(csrf -> csrf.disable())
     .authenticationProvider(authenticationProvider(passwordEncoder))
     .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/v1/auth/**").permitAll()
-        .anyRequest().authenticated()
-    )
+    .requestMatchers("/api/v1/auth/**").permitAll()
+    .anyRequest().authenticated()
+)
+    
     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
 
